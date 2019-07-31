@@ -1,3 +1,4 @@
+.ipynb_checkpoints/
 observations.csv
-image_metadata.csv
+image_metadata*.csv
 images/
