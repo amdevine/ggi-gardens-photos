@@ -33,7 +33,8 @@ obs_ids = list(observations['id'])
 # to get the original image size
 print("Retrieving photo data for {} observations".format(len(obs_ids)))
 images = []
-for idno in obs_ids[10:20]:
+obs_counter = 0
+for idno in obs_ids:
     url = "https://www.inaturalist.org/observations/{}.json".format(idno)
     r = requests.get(url).json()
     photos = r.get('observation_photos', [])
@@ -43,6 +44,10 @@ for idno in obs_ids[10:20]:
         photo_data['original_size_url'] = photo_data.get('large_url', '').replace('large', 'original')
         images.append(photo_data)
     time.sleep(1) # Rate limit 1 request per second
+
+    obs_counter += 1
+    if obs_counter % 10 == 0:
+        print("{} observations processed, {} total photo data retrieved".format(obs_counter, len(images)))
 
 # Export retrieved photo metadata as a CSV file
 print("Data retrieved for {} photos. Exporting to image_metadata.csv".format(len(images)))
@@ -88,4 +93,4 @@ for image in images:
     if image_counter % 10 == 0:
         print("Retrieved {} of {} images".format(image_counter, len(images)))
     time.sleep(1) # Rate limit 1 request per second
-print("Done, {} of {} images have been retrieved".format(len(images), len(images)))
+print("Completed. {} of {} images have been retrieved".format(len(images), len(images)))
